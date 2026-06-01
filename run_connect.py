@@ -1,5 +1,6 @@
 import os
 from os.path import join
+import argparse
 
 import scanpy as sc
 
@@ -16,11 +17,25 @@ from connect import (
     train_model,
 )
 
-data_dir = "/path/to/dataset"
-save_dir = "./connect_result"
+parser = argparse.ArgumentParser(description="Run CONNECT standard paired-data training.")
+parser.add_argument(
+    "--data-dir",
+    required=True,
+    help=(
+        "Directory containing rna_train.h5ad, adt_train.h5ad, "
+        "rna_test.h5ad, and adt_test.h5ad."
+    ),
+)
+parser.add_argument("--save-dir", default="./connect_result", help="Directory for CONNECT outputs.")
+parser.add_argument("--device", default="0", help="GPU index exposed through CUDA_VISIBLE_DEVICES.")
+parser.add_argument("--seed", type=int, default=42, help="Random seed.")
+args = parser.parse_args()
 
-set_seed(42)
-device = get_device("0")
+data_dir = args.data_dir
+save_dir = args.save_dir
+
+set_seed(args.seed)
+device = get_device(args.device)
 logger = init_logger(save_dir)
 
 # 1. Load paired training and test data.
