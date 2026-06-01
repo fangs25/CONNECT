@@ -19,7 +19,7 @@ CONNECT provides:
 Clone the repository and create the conda environment:
 
 ```bash
-git clone https://github.com/<your-account>/CONNECT.git
+git clone https://github.com/fangs25/CONNECT.git
 cd CONNECT
 
 conda env create -f environment.yml
@@ -30,7 +30,7 @@ Install PyTorch separately according to your operating system, CUDA version, and
 
 ```bash
 # Example only. Select the correct command for your CUDA/CPU environment.
-pip install torch
+pip install torch==2.0.1 --index-url https://download.pytorch.org/whl/cu117
 ```
 
 Run CONNECT scripts from the repository root so that Python can find the local
@@ -38,13 +38,6 @@ Run CONNECT scripts from the repository root so that Python can find the local
 
 ```bash
 python run_connect.py
-```
-
-For documentation builds:
-
-```bash
-pip install -r docs/requirements.txt
-sphinx-build -b html docs/source docs/build/html
 ```
 
 ## Quick Start
@@ -122,47 +115,11 @@ The documentation includes notebook tutorials for:
 - RNA+ADT mapping and prediction.
 - RNA+ADT with RNA-only augmentation.
 
-To build the local documentation:
-
-```bash
-cd docs
-make html
-```
-
-Then open:
-
-```bash
-docs/build/html/index.html
-```
-
 ## Reproducibility
 
 The `main` branch is intended for the clean software package, API documentation, and user tutorials.
 
 For manuscript reproduction, create a separate branch named `CONNECT-reproduce`:
-
-```bash
-git checkout -b CONNECT-reproduce
-```
-
-Suggested reproducibility layout:
-
-```text
-reproduce/
-  configs/
-  scripts/
-  notebooks/
-  benchmark_methods/
-  evaluation/
-  figures/
-  README.md
-```
-
-After pushing the branch to GitHub, link it from this README:
-
-```markdown
-For manuscript reproduction, please see the `CONNECT-reproduce` branch.
-```
 
 ## Data Format
 
@@ -173,10 +130,6 @@ Typical preprocessing settings are:
 - RNA: raw counts, `preprocess=False`.
 - ADT: CLR normalization, `preprocess=True`.
 - ATAC: TF-IDF normalization, for example `preprocess="Andrew"` and `ceiling=True`.
-
-## Citation
-
-Citation information will be added after publication.
 
 ## License
 
