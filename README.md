@@ -34,6 +34,10 @@ pip install torch==2.0.1 --index-url https://download.pytorch.org/whl/cu117
 pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121
 ```
 
+## Quick Start
+
+Standard paired-data training:
+
 Run CONNECT scripts from the repository root so that Python can find the local
 `connect` package:
 
@@ -52,62 +56,7 @@ files:
   adt_test.h5ad
 ```
 
-## Quick Start
-
-Standard paired-data training:
-
-```python
-import scanpy as sc
-from os.path import join
-
-from connect import (
-    set_seed,
-    get_device,
-    init_logger,
-    make_modality,
-    build_paired_loader,
-    build_model,
-    train_model,
-    predict,
-    save_model,
-    save_outputs,
-)
-
-data_dir = "/path/to/dataset"
-save_dir = "./connect_result"
-
-set_seed(42)
-device = get_device("0")
-logger = init_logger(save_dir)
-
-rna_train = sc.read_h5ad(join(data_dir, "rna_train.h5ad"))
-adt_train = sc.read_h5ad(join(data_dir, "adt_train.h5ad"))
-rna_test = sc.read_h5ad(join(data_dir, "rna_test.h5ad"))
-adt_test = sc.read_h5ad(join(data_dir, "adt_test.h5ad"))
-
-train_rna = make_modality(rna_train, "RNA", preprocess=False)
-train_adt = make_modality(adt_train, "ADT", preprocess=True)
-test_rna = make_modality(rna_test, "RNA", preprocess=False)
-test_adt = make_modality(adt_test, "ADT", preprocess=True)
-
-train_loader, valid_loader = build_paired_loader(
-    train_rna,
-    train_adt,
-    batch_size=128,
-    validation_split=0.1,
-    num_workers=0,
-    logger=logger,
-)
-
-model = build_model(train_loader, train_rna, train_adt, device=device)
-model = train_model(model, train_loader, valid_loader, device=device, logger=logger)
-
-outputs = predict(model, test_rna, test_adt, device=device, logger=logger)
-save_model(model, save_dir)
-save_outputs(outputs, save_dir)
-```
-
-See `run_connect.py` for a complete standard training example.
+See `run_connect.py` for a complete standard training procedure.
 
 ## Single-Modality Augmentation
 
@@ -134,14 +83,7 @@ Step-by-step tutorials are provided for:
 - [RNA+ADT mapping and prediction](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_adt_mapping_prediction.html)
 - [RNA+ADT with RNA-only augmentation](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_adt_unimodal_augmentation.html)
 
-
-## Reproducibility
-
-The `main` branch is intended for the clean software package, API documentation, and user tutorials.
-
-The code used to reproduce the results presented in the manuscript is available in the [`CONNECT-reproduce`](https://github.com/fangs25/CONNECT/tree/CONNECT-reproduce).
-
-## Data Format
+## Datasets
 
 Input data should be provided as AnnData objects or `.h5ad` files with cells in rows and features in columns.
 Datasets used in CONNECT's experiments can be accessed at [Zenodo](https://doi.org/10.5281/zenodo.20490832)
@@ -151,6 +93,13 @@ Typical preprocessing settings are:
 - RNA: raw counts, `preprocess=False`.
 - ADT: CLR normalization, `preprocess=True`.
 - ATAC: TF-IDF normalization, for example `preprocess="Andrew"` and `ceiling=True`.
+
+## Reproducibility
+
+The `main` branch is intended for the clean software package, API documentation, and user tutorials.
+
+The code used to reproduce the results presented in the manuscript is available in the [`CONNECT-reproduce`](https://github.com/fangs25/CONNECT/tree/CONNECT-reproduce).
+
 
 ## License
 
