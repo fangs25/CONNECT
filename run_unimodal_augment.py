@@ -27,16 +27,12 @@ from connect import (
     train_with_unimodal,
 )
 
-
-os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
-
-
 save_dir = "./connect_unimodal_augment_result"
-data_dir = "/DATA2/zhangjingxiao/fangs/data/data_multiomic/carotid/cross_validation_folds/RPE008"
-unimodal_data_path = "/DATA2/zhangjingxiao/fangs/data/data_multiomic/unimodal/carotid/carotid_rna.h5ad"
+data_dir = "./data/RNA_ADT/RPE008"
+unimodal_data_path = "./data/RNA_ADT/RNA_only/carotid_rna.h5ad"
 
 set_seed(42)
-device = get_device("5")
+device = get_device("0")
 logger = init_logger(save_dir)
 
 # 1. Load paired data and additional single-modality data.
