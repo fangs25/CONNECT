@@ -38,7 +38,18 @@ Run CONNECT scripts from the repository root so that Python can find the local
 `connect` package:
 
 ```bash
-python run_connect.py
+python run_connect.py --data-dir /path/to/dataset
+```
+
+`--data-dir` should be the parent directory containing the paired train/test
+files:
+
+```text
+/path/to/dataset/
+  rna_train.h5ad
+  adt_train.h5ad
+  rna_test.h5ad
+  adt_test.h5ad
 ```
 
 ## Quick Start
