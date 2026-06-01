@@ -12,7 +12,6 @@ CONNECT provides:
 - Full-feature cross-modal prediction without highly variable gene or peak pre-selection.
 - Support for RNA+ATAC and RNA+ADT paired datasets.
 - Optional single-modality augmentation using a three-stage training workflow.
-- Sphinx and ReadTheDocs documentation with notebook tutorials.
 
 ## Installation
 
@@ -119,7 +118,7 @@ The documentation includes notebook tutorials for:
 
 The `main` branch is intended for the clean software package, API documentation, and user tutorials.
 
-For manuscript reproduction, create a separate branch named `CONNECT-reproduce`:
+The code used to reproduce the results presented in the manuscript is available in the [`CONNECT-reproduce`](https://github.com/fangs25/CONNECT/tree/CONNECT-reproduce).
 
 ## Data Format
 
