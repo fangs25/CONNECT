@@ -30,6 +30,8 @@ Install PyTorch separately according to your operating system, CUDA version, and
 ```bash
 # Example only. Select the correct command for your CUDA/CPU environment.
 pip install torch==2.0.1 --index-url https://download.pytorch.org/whl/cu117
+# or
+pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121
 ```
 
 Run CONNECT scripts from the repository root so that Python can find the local
@@ -106,13 +108,21 @@ CONNECT also supports a three-stage workflow:
 
 See `run_unimodal_augment.py` for the complete workflow.
 
+## Documentation
+
+Full documentation, installation instructions, API reference, and tutorials are available on Read the Docs:
+
+- [CONNECT documentation](https://connect-singlecell.readthedocs.io/en/latest/)
+- [API reference](https://connect-singlecell.readthedocs.io/en/latest/api/index.html)
+
 ## Tutorials
 
-The documentation includes notebook tutorials for:
+Step-by-step tutorials are provided for:
 
-- RNA+ATAC mapping and prediction.
-- RNA+ADT mapping and prediction.
-- RNA+ADT with RNA-only augmentation.
+- [RNA+ATAC mapping and prediction](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_atac_mapping_prediction.html)
+- [RNA+ADT mapping and prediction](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_adt_mapping_prediction.html)
+- [RNA+ADT with RNA-only augmentation](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_adt_unimodal_augmentation.html)
+
 
 ## Reproducibility
 
@@ -123,6 +133,7 @@ The code used to reproduce the results presented in the manuscript is available 
 ## Data Format
 
 Input data should be provided as AnnData objects or `.h5ad` files with cells in rows and features in columns.
+Datasets used in CONNECT's experiments can be accessed at [Zenodo](https://doi.org/10.5281/zenodo.20490832)
 
 Typical preprocessing settings are:
 
