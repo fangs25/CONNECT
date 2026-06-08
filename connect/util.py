@@ -1,3 +1,9 @@
+import glob
+import os
+import shutil
+import sys
+from pathlib import Path
+
 import pandas as pd
 from itertools import repeat
 
@@ -91,3 +97,64 @@ class MetricTracker:
             Mapping from metric names to their running averages.
         """
         return dict(self._data.average)
+
+
+def extract_if_needed(h5ad_path: str, logger=None) -> str:
+    """Ensure an .h5ad file exists, reassembling from split parts if necessary.
+
+    CONNECT datasets that exceed GitHub's 20 MB file-size limit are stored as
+    split parts (``<name>.h5ad.part_aa``, ``<name>.h5ad.part_ab``, …).  This
+    helper checks whether the target ``.h5ad`` file already exists on disk.  If
+    it does, the path is returned unchanged.  Otherwise the parts are
+    concatenated in alphabetical order to reconstruct the original file.
+
+    Parameters
+    ----------
+    h5ad_path
+        Path to the expected ``.h5ad`` file.
+    logger
+        Optional logger for progress messages.
+
+    Returns
+    -------
+    str
+        The original ``h5ad_path`` — either it already existed or it was just
+        reassembled from parts.
+
+    Raises
+    ------
+    FileNotFoundError
+        If neither the ``.h5ad`` file nor any split parts are found.
+    """
+    path = Path(h5ad_path)
+    if path.exists():
+        return str(path)
+
+    # Look for split parts in the same directory.
+    part_pattern = str(path.parent / (path.name + ".part_*"))
+    parts = sorted(glob.glob(part_pattern))
+
+    if not parts:
+        raise FileNotFoundError(
+            f"Neither {path} nor split parts ({path.name}.part_*) were found. "
+            f"Please ensure the dataset is available in {path.parent}."
+        )
+
+    if logger:
+        logger.info(f"Reassembling {path.name} from {len(parts)} split part(s) ...")
+    else:
+        print(f"Reassembling {path.name} from {len(parts)} split part(s) ...",
+              file=sys.stderr)
+
+    with open(path, "wb") as out_f:
+        for part_path in parts:
+            with open(part_path, "rb") as in_f:
+                shutil.copyfileobj(in_f, out_f)
+
+    if logger:
+        logger.info(f"Reassembled {path.name} ({path.stat().st_size:,} bytes).")
+    else:
+        print(f"Reassembled {path.name} ({path.stat().st_size:,} bytes).",
+              file=sys.stderr)
+
+    return str(path)

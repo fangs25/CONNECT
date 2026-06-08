@@ -1,0 +1,2 @@
+# Large h5ad files — stored as split zip archives instead
+*.h5ad

@@ -7,6 +7,7 @@ import scanpy as sc
 from connect import (
     build_model,
     build_paired_loader,
+    extract_if_needed,
     get_device,
     init_logger,
     make_modality,
@@ -39,10 +40,12 @@ device = get_device(args.device)
 logger = init_logger(save_dir)
 
 # 1. Load paired training and test data.
-rna_train = sc.read_h5ad(join(data_dir, "rna_train.h5ad"))
-adt_train = sc.read_h5ad(join(data_dir, "adt_train.h5ad"))
-rna_test = sc.read_h5ad(join(data_dir, "rna_test.h5ad"))
-adt_test = sc.read_h5ad(join(data_dir, "adt_test.h5ad"))
+#    Auto-extract from split parts if the .h5ad files are not found
+#    (datasets >20 MB are stored as <name>.h5ad.part_* in the data directory).
+rna_train = sc.read_h5ad(extract_if_needed(join(data_dir, "rna_train.h5ad"), logger))
+adt_train = sc.read_h5ad(extract_if_needed(join(data_dir, "adt_train.h5ad"), logger))
+rna_test = sc.read_h5ad(extract_if_needed(join(data_dir, "rna_test.h5ad"), logger))
+adt_test = sc.read_h5ad(extract_if_needed(join(data_dir, "adt_test.h5ad"), logger))
 print(rna_train.X.max(), adt_train.X.max())
 
 # 2. Modality-specific preprocessing.

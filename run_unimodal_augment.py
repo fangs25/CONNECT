@@ -7,7 +7,6 @@ This script follows the backup experiment setting:
 3. final latent-space alignment.
 """
 
-import os
 from os.path import join
 
 import scanpy as sc
@@ -16,6 +15,7 @@ from connect import (
     align_model,
     build_model,
     build_paired_loader,
+    extract_if_needed,
     get_device,
     init_logger,
     make_modality,
@@ -36,11 +36,12 @@ device = get_device("0")
 logger = init_logger(save_dir)
 
 # 1. Load paired data and additional single-modality data.
-rna_train = sc.read_h5ad(join(data_dir, "rna_train.h5ad"))
-adt_train = sc.read_h5ad(join(data_dir, "adt_train.h5ad"))
-rna_test = sc.read_h5ad(join(data_dir, "rna_test.h5ad"))
-adt_test = sc.read_h5ad(join(data_dir, "adt_test.h5ad"))
-unimodal_rna = sc.read_h5ad(unimodal_data_path)
+#    Auto-extract from split parts if the .h5ad files are not found.
+rna_train = sc.read_h5ad(extract_if_needed(join(data_dir, "rna_train.h5ad"), logger))
+adt_train = sc.read_h5ad(extract_if_needed(join(data_dir, "adt_train.h5ad"), logger))
+rna_test = sc.read_h5ad(extract_if_needed(join(data_dir, "rna_test.h5ad"), logger))
+adt_test = sc.read_h5ad(extract_if_needed(join(data_dir, "adt_test.h5ad"), logger))
+unimodal_rna = sc.read_h5ad(extract_if_needed(unimodal_data_path, logger))
 
 # 2. Describe modality-specific preprocessing.
 train_rna = make_modality(rna_train, "RNA", preprocess=False)
@@ -127,45 +128,3 @@ rna_test.uns['connect_rna_predicted'] = outputs['mod1_predicted_from_mod2'].deta
 adt_test.uns['connect_adt_emb'] = outputs['mod2_latent'].detach().cpu().numpy()
 adt_test.uns['connect_adt_mapped'] = outputs['mod2_mapping_from_mod1'].detach().cpu().numpy()
 adt_test.uns['connect_adt_predicted'] = outputs['mod2_predicted_from_mod1'].detach().cpu().numpy()
-
-from integration import *
-dataset_name = 'RPE008'
-method_name = 'connect'
-
-
-rna_data = rna_test
-adt_original = adt_test
-adt_ = adt_original.copy()
-adt_data = clr_normalize_seurat_style(adt_, inplace=True)    
-
-# 获取可用方法
-available_methods = set()
-
-# RNA相关方法
-for key in rna_data.uns.keys():
-    if any(key.endswith(suffix) for suffix in ['_rna_predicted', '_rna_emb', '_rna_mapped']):
-        method = key.split('_rna')[0]
-        available_methods.add(method)
-
-# ADT相关方法
-for key in adt_data.uns.keys():
-    if any(key.endswith(suffix) for suffix in ['_adt_predicted', '_adt_emb', '_adt_mapped']):
-        method = key.split('_adt')[0]
-        available_methods.add(method)
-
-available_methods = list(available_methods)
-print(f"✓ 可用方法: {available_methods}")
-
-data_info =  {
-        'rna_data': rna_data,
-        'adt_data': adt_data,
-        'available_methods': available_methods,
-        'dataset_name': dataset_name
-    }
-
-
-
-evaluator = IntegratedMultiModalEvaluator('integrated_evaluation_results.csv')
-evaluator.data_info = data_info
-result = evaluator.evaluate_single_method(dataset_name, method_name)
-print(result)
