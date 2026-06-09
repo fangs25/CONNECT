@@ -21,8 +21,7 @@ CONNECT provides:
 
 CONNECT is written in pure Python and has been tested on:
 
-- **Linux** (Ubuntu 20.04, 22.04) — primary development and test platform
-- **macOS** (12 Monterey, 13 Ventura, 14 Sonoma) — CPU-only or MPS backend
+- **Linux** (Ubuntu 16.04, 24.04) — primary development and test platform
 - **Windows** — supported via conda but less extensively tested
 
 ### Software dependencies
@@ -32,7 +31,7 @@ All required packages are listed in `environment.yml`. The key dependencies are:
 | Package   | Version tested | Notes                                          |
 |-----------|---------------|------------------------------------------------|
 | Python    | 3.10          |                                                 |
-| PyTorch   | 2.0.1, 2.5.1  | CUDA 11.7 / 12.1 or CPU-only; see install note |
+| PyTorch   | 2.0.1, 2.5.1  | CUDA 11.7 / 12.1 or CPU-only |
 | numpy     | >=1.24        |                                                 |
 | pandas    | >=2.0         |                                                 |
 | scipy     | >=1.10        |                                                 |
@@ -42,10 +41,9 @@ All required packages are listed in `environment.yml`. The key dependencies are:
 
 ### Hardware requirements
 
-- **GPU**: A CUDA-capable NVIDIA GPU with at least 4 GB VRAM is recommended for training. The demo runs comfortably on 2 GB VRAM.
+- **GPU**: A CUDA-capable NVIDIA GPU with at least 8 GB VRAM is recommended for training. The demo runs comfortably on 4 GB VRAM.
 - **CPU-only**: All workloads run on CPU; training is approximately 5–10× slower.
-- **RAM**: 8 GB minimum for the demo dataset; 32+ GB recommended for full-scale datasets.
-- **Disk**: ~200 MB for the software and demo data; additional space for downloaded published datasets.
+- **RAM**: RAM: 8 GB minimum for the demo dataset.
 
 ---
 
@@ -100,7 +98,7 @@ they are stored as split parts — the run scripts **automatically reassemble**
 them on first use (no manual steps required).
 
 **Expected run time:**
-- ~2–5 minutes on a desktop with a modern NVIDIA GPU (e.g., RTX 3060 or better)
+- ~3–5 minutes on a desktop with a modern NVIDIA GPU (e.g., RTX 3060 or better)
 - ~10–20 minutes on a modern CPU (e.g., Apple M1/M2 or Intel i7)
 
 ### Run CONNECT on the RPE008 demo
@@ -126,21 +124,13 @@ After training, the output directory (`demo_output/`) will contain:
 **Example training log output:**
 
 ```
-Reassembling rna_train.h5ad from 21 split part(s) ...
-Reassembled rna_train.h5ad (410,779,016 bytes).
-Train Epoch: 1 [0/200 (0%)] Loss: 8.123456
-    epoch         : 1
-    loss          : 6.1234
-    ...
-Train Epoch: 80 [0/200 (0%)] Loss: 1.234567
-    epoch         : 80
-    loss          : 1.8456
-    ...
+2026-05-05 01:37:36,943 - train - INFO - Reading RNA from H5AD files...
+2026-05-05 01:37:37,544 - train - INFO - Reading ADT from H5AD files...
+2026-05-05 01:37:37,603 - train - INFO - Proprecessing ADT...
+2026-05-05 01:37:38,915 - train - INFO - Modality 1 : RNA with dimension (26226, 36601); Preprocess : False
+2026-05-05 01:37:38,916 - train - INFO - Modality 2 : ADT with dimension (26226, 283); Preprocess : True
+...
 ```
-
-The loss should decrease over epochs.  Exact numbers vary due to random
-initialisation, but a consistent downward trend in `loss` across epochs
-indicates correct operation.
 
 ---
 
@@ -247,14 +237,14 @@ outputs = predict(model, test_rna, test_adt, device="cuda:0", batch_size=128)
 
 ---
 
-## Documentation
+## 5. Documentation
 
 Full documentation, installation instructions, API reference, and tutorials are available on Read the Docs:
 
 - [CONNECT documentation](https://connect-singlecell.readthedocs.io/en/latest/)
 - [API reference](https://connect-singlecell.readthedocs.io/en/latest/api/index.html)
 
-## Tutorials
+## 6. Tutorials
 
 Step-by-step tutorials are provided for:
 
@@ -262,7 +252,7 @@ Step-by-step tutorials are provided for:
 - [RNA+ADT mapping and prediction](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_adt_mapping_prediction.html)
 - [RNA+ADT with RNA-only augmentation](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_adt_unimodal_augmentation.html)
 
-## Reproducibility
+## 7. Reproducibility
 
 The `main` branch is intended for the clean software package, API documentation, and user tutorials.
 
