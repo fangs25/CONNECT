@@ -240,6 +240,8 @@ outputs = predict(model, test_rna, test_adt, device="cuda:0", batch_size=128)
 
 ## 5. Documentation
 
+The [`main`]((https://github.com/fangs25/CONNECT)) branch is intended for the clean software package, API documentation, and user tutorials.
+
 Full documentation, installation instructions, API reference, and tutorials are available on Read the Docs:
 
 - [CONNECT documentation](https://connect-singlecell.readthedocs.io/en/latest/)
@@ -252,12 +254,6 @@ Step-by-step tutorials are provided for:
 - [RNA+ATAC mapping and prediction](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_atac_mapping_prediction.html)
 - [RNA+ADT mapping and prediction](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_adt_mapping_prediction.html)
 - [RNA+ADT with RNA-only augmentation](https://connect-singlecell.readthedocs.io/en/latest/tutorials/rna_adt_unimodal_augmentation.html)
-
-## 7. Reproducibility
-
-The `main` branch is intended for the clean software package, API documentation, and user tutorials.
-
-The code used to reproduce the results presented in the manuscript is available in the [`CONNECT-reproduce`](https://github.com/fangs25/CONNECT/tree/CONNECT-reproduce) branch.
 
 ## License
 
