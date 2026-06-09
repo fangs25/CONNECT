@@ -4,7 +4,8 @@ CONNECT is a PyTorch-based framework for paired single-cell multi-omics integrat
 
 ## Overview
 
-Single-cell multi-omics technologies provide paired measurements across molecular layers, but such paired profiles remain expensive and difficult to scale. CONNECT uses limited paired data as a reference bridge to infer missing modalities and translate representations for new cells.
+Single-cell multi-omics technologies provide paired measurements across molecular layers, but such paired profiles remain expensive and difficult to scale. CONNECT uses limited paired data as a reference bridge to infer missing modalities and translate representations for new cells. Full documentation is available on Read the Docs: [CONNECT documentation](https://connect-singlecell.readthedocs.io/en/latest/). 
+
 
 CONNECT provides:
 
